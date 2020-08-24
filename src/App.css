@@ -1,8 +1,47 @@
 .App {
+  display: flex;
+  color: white;
   text-align: center;
+  background-color: transparent;
+  padding-left: 100px;
+  padding-top: 100px;
+  padding-right: 100px;
+}
+ul {
+  margin: 0px;
+  padding: 0px;
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+}
+ul,
+li {
+  text-decoration: none;
+  list-style: none;
+  text-align: left;
+}
+p {
+  margin: 0px;
+}
+button {
+  background: transparent;
+  color: #fff;
+  border: 0;
+  height: 20px;
+}
+button:focus {
+  outline: none !important;
+  border: none !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+}
+@media screen and (max-width: 680px) {
+  .App {
+    padding-left: 10vw;
+    padding-right: 10vw;
+  }
 }
 
-.App-logo {
+/* .App-logo {
   height: 40vmin;
   pointer-events: none;
 }
@@ -14,7 +53,6 @@
 }
 
 .App-header {
-  background-color: #282c34;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -35,4 +73,4 @@
   to {
     transform: rotate(360deg);
   }
-}
+} */
