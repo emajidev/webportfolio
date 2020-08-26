@@ -41,8 +41,17 @@ class Home extends Component {
           <Skills />
         </div>
         <div>
-          <Projects />
+          <Projects repos={this.props.repos} languages={this.props.languages} />
         </div>
+        <footer className="blockquote-footer center">
+          <div className="footer">
+            &copy; {new Date().getFullYear()} Copyright:{" "}
+            <a style={{ color: "#fff" }} href="https://github.com/emajidev">
+              {" "}
+              emajidev{" "}
+            </a>
+          </div>
+        </footer>
       </Container>
     );
   }

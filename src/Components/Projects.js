@@ -1,7 +1,7 @@
 import React, { Component, useState } from "react";
 import { FaRegFileCode, FaGithubAlt } from "react-icons/fa";
 import { Container, Row, Col, Button } from "reactstrap";
-
+import modal from "../css/modal.css";
 import grid from "../css/grid.css";
 function DetailRepo(props) {
   return (
@@ -26,7 +26,7 @@ function DetailRepo(props) {
       </li>
       <li className="infoRepo">
         <p className="textInfoRepo">Link: </p>
-        <a>{props.item.html_url} </a>
+        <a href={props.item.html_url}>{props.item.html_url} </a>
       </li>
     </ul>
   );
@@ -53,7 +53,6 @@ function Item(props) {
   );
 }
 function ListRepos(props) {
-  const [info, setInfo] = useState(false);
   return (
     <ul className="fileRepo">
       {props.repos.map((item, index) => (
@@ -67,6 +66,7 @@ function GalleryProjects(props) {
   let newImages = [];
   let uri, className, dif;
   let img = new Image();
+  console.log("img", img);
   props.repos.map((item) => {
     uri =
       "https://raw.githubusercontent.com/emajidev/" +
@@ -74,8 +74,6 @@ function GalleryProjects(props) {
       "/master/sample.png";
     img.src = uri;
     dif = img.width / img.height;
-    console.log(item.uri);
-    console.log("tamaño", img.width, img.height, dif);
     if (dif < 0.5) {
       className = "length";
     } else if (dif > 2) {
@@ -85,21 +83,61 @@ function GalleryProjects(props) {
     }
 
     let data = {
+      description: item.description,
       url: uri,
+      link: item.html_url,
       name: item.name,
       classItem: className,
     };
     newImages.push(data);
   });
   console.log("img", newImages);
+  const [modal, setModal] = useState(false);
+  const [data, setData] = useState([]);
   return (
     <div class="container-masonry masonry">
       {newImages.map((repo) => (
         <div className={"item " + repo.classItem}>
-          <div className="FrontGround">{repo.name}</div>
+          <button
+            className="FrontGround"
+            onClick={() => {
+              setModal(!modal);
+              setData(repo);
+            }}
+          >
+            <div>{repo.name}</div>
+          </button>
           <img className="img-ajust" src={repo.url} alt="" />
         </div>
       ))}
+      {modal ? (
+        <div className="contentModal">
+          <div className="a-interaction">
+            <p className="m-none">{data.name}</p>
+            <iframe
+              src={data.link}
+              marginwidth="0"
+              marginheight="0"
+              name="ventana_iframe"
+              scrolling="no"
+              border="0"
+              frameborder="0"
+              width="100%"
+              height="80%"
+            ></iframe>
+            <p className="m-none">{data.description}</p>
+          </div>
+          <button
+            onClick={() => {
+              setModal(!modal);
+              setData([]);
+            }}
+            className="outer-edge"
+          />
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 }
@@ -111,29 +149,6 @@ class Projects extends Component {
       listLanguages: [],
       file: "galery",
     };
-  }
-
-  getReposGit() {
-    return fetch(
-      "https://api.github.com/users/emajidev/repos"
-    ).then((response) => response.json());
-  }
-  getLanguages(repos) {
-    let listLanguages = [];
-    var xmlHttp = new XMLHttpRequest();
-    repos.map((item) => {
-      xmlHttp.open("GET", item.languages_url, false); // false for synchronous request
-      xmlHttp.send(null);
-      let response = JSON.parse(xmlHttp.response);
-      let array = Object.keys(response);
-      listLanguages.push(array);
-    });
-    return listLanguages;
-  }
-  async componentDidMount() {
-    let getRepos = await this.getReposGit();
-    let getLanguages = await this.getLanguages(getRepos);
-    this.setState({ repos: getRepos, listLanguages: getLanguages });
   }
 
   render() {
@@ -158,13 +173,13 @@ class Projects extends Component {
           {this.state.file == "file" ? (
             <div>
               <ListRepos
-                repos={this.state.repos}
-                listLanguages={this.state.listLanguages}
+                repos={this.props.repos}
+                listLanguages={this.props.languages}
               />
             </div>
           ) : (
             <div>
-              <GalleryProjects repos={this.state.repos} />
+              <GalleryProjects repos={this.props.repos} />
             </div>
           )}
         </div>
